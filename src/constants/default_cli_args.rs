@@ -1,1 +1,11 @@
-pub const DEFAULT_IFACE: &str = "en0";
+#[cfg(target_os = "macos")]
+pub fn default_iface() -> String {
+    use crate::utils::network::get_active_interface;
+
+    get_active_interface().unwrap_or_else(|| "en0".to_string())
+}
+
+#[cfg(not(target_os = "macos"))]
+pub fn default_iface() -> String {
+    "eth0".to_string()
+}

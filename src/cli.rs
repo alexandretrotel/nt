@@ -2,7 +2,7 @@ use clap::{Args, Parser, Subcommand};
 
 use crate::utils::network::Unit;
 
-use crate::constants::default_cli_args::DEFAULT_IFACE;
+use crate::constants::default_cli_args::default_iface;
 
 #[derive(Parser)]
 #[command(name = "nt")]
@@ -17,7 +17,7 @@ pub enum Commands {
     /// Display real-time network speed
     Speed {
         /// Interface name
-        #[arg(short, long, default_value_t = String::from(DEFAULT_IFACE))]
+        #[arg(short, long, default_value_t = default_iface())]
         iface: String,
 
         /// Unit to format speed (bps/kbps/mbps/gbps)
@@ -36,7 +36,7 @@ pub enum NetworkAction {
     /// List network interfaces
     List {
         /// Interface name
-        #[arg(short, long, default_value_t = String::from(DEFAULT_IFACE))]
+        #[arg(short, long, default_value_t = default_iface())]
         iface: String,
 
         #[command(flatten)]
@@ -45,7 +45,7 @@ pub enum NetworkAction {
     /// Remove a network interface
     Remove {
         /// Interface name
-        #[arg(short, long, default_value_t = String::from(DEFAULT_IFACE))]
+        #[arg(short, long, default_value_t = default_iface())]
         iface: String,
 
         /// SSID of the network to remove
