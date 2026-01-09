@@ -5,7 +5,7 @@ pub fn run(iface: &str, ssid: &str, dry_run: DryRun) -> Result<()> {
     let action = || {
         #[cfg(target_os = "macos")]
         {
-            macos::remove_network(iface, ssid)?;
+            macos::remove::remove_network(iface, ssid)?;
             Ok(())
         }
 

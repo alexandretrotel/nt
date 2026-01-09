@@ -5,7 +5,7 @@ pub fn run(iface: &str, dry_run: DryRun) -> Result<()> {
     let action = || {
         #[cfg(target_os = "macos")]
         {
-            macos::list_networks(iface)?;
+            macos::list::list_networks(iface)?;
             Ok(())
         }
 
