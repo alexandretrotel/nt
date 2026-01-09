@@ -19,6 +19,7 @@ pub enum Commands {
         /// Interface name
         #[arg(short, long, default_value_t = String::from(DEFAULT_IFACE))]
         iface: String,
+
         /// Unit to format speed (bps/kbps/mbps/gbps)
         #[arg(short, long, value_enum, default_value_t = Unit::Mbps)]
         unit: Unit,
