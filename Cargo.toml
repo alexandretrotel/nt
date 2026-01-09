@@ -2,6 +2,16 @@
 name = "nt"
 version = "0.1.0"
 edition = "2024"
+description = "Network tooling for macOS — realtime speed display and simple network interface management."
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/alexandretrotel/nt"
+homepage = "https://github.com/alexandretrotel/nt"
+documentation = "https://docs.rs/nt"
+authors = ["Alexandre Trotel"]
+keywords = ["network", "macos", "cli", "bandwidth", "monitoring"]
+categories = ["command-line-utilities"]
+include = ["src/**", "Cargo.toml", "README.md", "LICENSE-*"]
 
 [dependencies]
 anyhow = "1.0.100"
@@ -12,3 +22,6 @@ tokio = { version = "1.49.0", features = ["macros", "rt-multi-thread", "time"] }
 [[bin]]
 name = "nt"
 path = "src/main.rs"
+
+[package.metadata]
+repository_issues = "https://github.com/alexandretrotel/nt/issues"
