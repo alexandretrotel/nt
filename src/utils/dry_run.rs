@@ -18,3 +18,16 @@ where
         }
     }
 }
+
+pub async fn run_async<F, Fut>(dry_run: DryRun, message: &str, action: F) -> Result<()>
+where
+    F: Fn() -> Fut,
+    Fut: std::future::Future<Output = Result<()>>,
+{
+    if dry_run.enabled {
+        println!("[dry-run] {message}");
+        Ok(())
+    } else {
+        action().await
+    }
+}
