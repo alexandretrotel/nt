@@ -6,7 +6,11 @@ mod remove;
 
 pub fn run(action: NetworkAction) -> Result<()> {
     match action {
-        NetworkAction::List { iface } => list::run(&iface),
-        NetworkAction::Remove { iface, ssid } => remove::run(&iface, &ssid),
+        NetworkAction::List { iface, dry_run } => list::run(&iface, dry_run),
+        NetworkAction::Remove {
+            iface,
+            ssid,
+            dry_run,
+        } => remove::run(&iface, &ssid, dry_run),
     }
 }

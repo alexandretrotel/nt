@@ -1,4 +1,4 @@
-use clap::{Parser, Subcommand};
+use clap::{Args, Parser, Subcommand};
 
 use crate::utils::network::Unit;
 
@@ -37,13 +37,27 @@ pub enum NetworkAction {
         /// Interface name
         #[arg(short, long, default_value_t = String::from(DEFAULT_IFACE))]
         iface: String,
+
+        #[command(flatten)]
+        dry_run: DryRun,
     },
     /// Remove a network interface
     Remove {
         /// Interface name
         #[arg(short, long, default_value_t = String::from(DEFAULT_IFACE))]
         iface: String,
+
         /// SSID of the network to remove
         ssid: String,
+
+        #[command(flatten)]
+        dry_run: DryRun,
     },
+}
+
+#[derive(Args, Debug, Clone, Copy)]
+pub struct DryRun {
+    /// Do not execute actions; show what would happen
+    #[arg(long = "dry-run")]
+    pub enabled: bool,
 }
