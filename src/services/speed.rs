@@ -5,7 +5,7 @@ use tokio::time::{Duration, sleep};
 
 use crate::utils::network::{Unit, format_speed};
 
-pub async fn realtime_speed(iface: String) -> Result<()> {
+pub async fn realtime_speed(iface: String, unit: Unit) -> Result<()> {
     let mut prev_rx: u64 = 0;
     let mut prev_tx: u64 = 0;
 
@@ -20,8 +20,8 @@ pub async fn realtime_speed(iface: String) -> Result<()> {
                 let down_b = rx.saturating_sub(prev_rx);
                 let up_b = tx.saturating_sub(prev_tx);
 
-                let down_str = format_speed(down_b, Unit::Mbps);
-                let up_str = format_speed(up_b, Unit::Mbps);
+                let down_str = format_speed(down_b, unit);
+                let up_str = format_speed(up_b, unit);
 
                 print!("\r↓ {:>10}  ↑ {:>10}", down_str, up_str);
                 stdout().flush()?;
