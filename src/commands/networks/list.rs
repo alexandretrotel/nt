@@ -1,20 +1,22 @@
-use crate::{cli::DryRun, services::networks::macos};
+use crate::{cli::DryRun, services::networks::macos, utils::dry_run::DryRunable};
 use anyhow::Result;
 
 pub fn run(iface: &str, dry_run: DryRun) -> Result<()> {
-    if dry_run.enabled {
-        println!("[dry-run] Would list networks on interface '{}'", iface);
-        return Ok(());
-    }
+    let action = || {
+        #[cfg(target_os = "macos")]
+        {
+            macos::list_networks(iface)?;
+            Ok(())
+        }
 
-    #[cfg(target_os = "macos")]
-    {
-        macos::list_networks(iface)?;
-        Ok(())
-    }
+        #[cfg(not(target_os = "macos"))]
+        {
+            Err(anyhow::anyhow("Not supported on this platform"))
+        }
+    };
 
-    #[cfg(not(target_os = "macos"))]
-    {
-        Err(anyhow::anyhow("Not supported on this platform"))
-    }
+    action.run_with_message(
+        dry_run,
+        &format!("Would list networks on interface '{}'", iface),
+    )
 }
