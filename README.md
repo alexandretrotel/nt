@@ -60,6 +60,15 @@ By default:
 
 * Interface is auto-detected (falls back to `en0` or `eth0`)
 * Unit is `Mbps`
+* Output updates every second (by default)
+
+You can change the update interval with the `--delay` option:
+
+```bash
+ntw speed --delay 500
+```
+
+The displayed throughput is normalized to "per second" regardless of the actual interval.
 
 #### Specify interface and unit
 
