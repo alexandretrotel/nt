@@ -5,7 +5,7 @@ use crate::utils::network::Unit;
 use crate::constants::default_cli_args::default_iface;
 
 #[derive(Parser)]
-#[command(name = "nt")]
+#[command(name = "ntw")]
 #[command(about = "Network tooling for macOS", long_about = None)]
 pub struct Cli {
     #[command(subcommand)]

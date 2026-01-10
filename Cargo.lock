@@ -286,7 +286,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "nt"
+name = "ntapi"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c70f219e21142367c70c0b30c6a9e3a14d55b4d12a204d897fbec83a0363f081"
+dependencies = [
+ "winapi",
+]
+
+[[package]]
+name = "ntw"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -294,15 +303,6 @@ dependencies = [
  "inquire",
  "sysinfo",
  "tokio",
-]
-
-[[package]]
-name = "ntapi"
-version = "0.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c70f219e21142367c70c0b30c6a9e3a14d55b4d12a204d897fbec83a0363f081"
-dependencies = [
- "winapi",
 ]
 
 [[package]]

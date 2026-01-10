@@ -1,13 +1,13 @@
 [package]
-name = "nt"
+name = "ntw"
 version = "0.1.0"
 edition = "2024"
 description = "Network tooling for macOS — realtime speed display and simple network interface management."
 readme = "README.md"
 license = "MIT"
-repository = "https://github.com/alexandretrotel/nt"
-homepage = "https://github.com/alexandretrotel/nt"
-documentation = "https://docs.rs/nt"
+repository = "https://github.com/alexandretrotel/ntw"
+homepage = "https://github.com/alexandretrotel/ntw"
+documentation = "https://docs.rs/ntw"
 authors = ["Alexandre Trotel"]
 keywords = ["network", "macos", "cli", "bandwidth", "monitoring"]
 categories = ["command-line-utilities"]
@@ -21,8 +21,8 @@ sysinfo = "0.37.2"
 tokio = { version = "1.49.0", features = ["macros", "rt-multi-thread", "time"] }
 
 [[bin]]
-name = "nt"
+name = "ntw"
 path = "src/main.rs"
 
 [package.metadata]
-repository_issues = "https://github.com/alexandretrotel/nt/issues"
+repository_issues = "https://github.com/alexandretrotel/ntw/issues"
