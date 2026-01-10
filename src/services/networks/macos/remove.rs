@@ -1,27 +1,26 @@
-use anyhow::Result;
-use std::process::Command;
+use anyhow::{Context, Result};
+use std::process::{Command, Stdio};
 
 #[cfg(target_os = "macos")]
 use inquire::MultiSelect;
 
-use crate::{cli::DryRun, utils::dry_run::DryRunable};
-
 #[cfg(target_os = "macos")]
-use super::{list, remove};
+use super::list;
 
-pub fn remove_network_or_interactive(
-    iface: &str,
-    ssid: Option<&str>,
-    dry_run: DryRun,
-) -> Result<()> {
+use tokio::task::JoinSet;
+
+pub fn remove_network_or_interactive(iface: &str, ssid: Option<&str>) -> Result<()> {
     match ssid {
-        Some(s) => remove_network(iface, s)?,
-        None => remove_networks_interactive(iface, dry_run)?,
+        Some(s) => {
+            remove_network(iface, s)?;
+            println!("✓ {}", s);
+            Ok(())
+        }
+        None => remove_networks_interactive(iface),
     }
-    Ok(())
 }
 
-pub fn remove_networks_interactive(iface: &str, dry_run: DryRun) -> Result<()> {
+pub fn remove_networks_interactive(iface: &str) -> Result<()> {
     let networks = list::get_preferred_networks(iface)?;
 
     if networks.is_empty() {
@@ -36,22 +35,61 @@ pub fn remove_networks_interactive(iface: &str, dry_run: DryRun) -> Result<()> {
         return Ok(());
     }
 
-    for ssid in chosen {
-        let action = || remove::remove_network(iface, &ssid);
-        action.run_with_message(
-            dry_run,
-            &format!("Would remove network '{}' from '{}'", ssid, iface),
-        )?;
+    let rt = tokio::runtime::Runtime::new()?;
+    let results = rt.block_on(remove_networks_parallel(iface, chosen));
+
+    let (ok, failed): (Vec<_>, Vec<_>) = results.into_iter().partition(|(_, r)| r.is_ok());
+
+    println!();
+    println!("Removed {} network(s) from {}", ok.len(), iface);
+    for (ssid, _) in ok {
+        println!("  ✓ {}", ssid);
+    }
+
+    if !failed.is_empty() {
+        println!();
+        println!("Failed to remove {} network(s):", failed.len());
+        for (ssid, err) in failed {
+            println!("  ✗ {} ({})", ssid, err.unwrap_err());
+        }
     }
 
     Ok(())
 }
 
-pub fn remove_network(iface: &str, ssid: &str) -> Result<()> {
-    Command::new("networksetup")
-        .args(["-removepreferredwirelessnetwork", iface, ssid])
-        .status()?;
+async fn remove_networks_parallel(iface: &str, ssids: Vec<String>) -> Vec<(String, Result<()>)> {
+    let mut set = JoinSet::new();
 
-    println!("Removed network: {ssid}");
+    for ssid in ssids {
+        let iface = iface.to_string();
+        set.spawn_blocking(move || {
+            let res = remove_network(&iface, &ssid);
+            (ssid, res)
+        });
+    }
+
+    let mut results = Vec::new();
+
+    while let Some(res) = set.join_next().await {
+        if let Ok(pair) = res {
+            results.push(pair);
+        }
+    }
+
+    results
+}
+
+pub fn remove_network(iface: &str, ssid: &str) -> Result<()> {
+    let status = Command::new("networksetup")
+        .args(["-removepreferredwirelessnetwork", iface, ssid])
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        .with_context(|| format!("failed to execute networksetup for '{}'", ssid))?;
+
+    if !status.success() {
+        anyhow::bail!("network not found or removal failed");
+    }
+
     Ok(())
 }

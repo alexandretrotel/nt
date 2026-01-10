@@ -6,7 +6,7 @@ pub fn run(iface: &str, ssid: &Option<String>, dry_run: DryRun) -> Result<()> {
         #[cfg(target_os = "macos")]
         {
             let ssid_ref = ssid.as_deref();
-            macos::remove::remove_network_or_interactive(iface, ssid_ref, dry_run)?;
+            macos::remove::remove_network_or_interactive(iface, ssid_ref)?;
             Ok(())
         }
 
