@@ -9,18 +9,18 @@ use super::list;
 
 use tokio::task::JoinSet;
 
-pub fn remove_network_or_interactive(iface: &str, ssid: Option<&str>) -> Result<()> {
+pub async fn remove_network_or_interactive(iface: &str, ssid: Option<&str>) -> Result<()> {
     match ssid {
         Some(s) => {
             remove_network(iface, s)?;
             println!("✓ {}", s);
             Ok(())
         }
-        None => remove_networks_interactive(iface),
+        None => remove_networks_interactive(iface).await,
     }
 }
 
-pub fn remove_networks_interactive(iface: &str) -> Result<()> {
+pub async fn remove_networks_interactive(iface: &str) -> Result<()> {
     let networks = list::get_preferred_networks(iface)?;
 
     if networks.is_empty() {
@@ -35,8 +35,7 @@ pub fn remove_networks_interactive(iface: &str) -> Result<()> {
         return Ok(());
     }
 
-    let rt = tokio::runtime::Runtime::new()?;
-    let results = rt.block_on(remove_networks_parallel(iface, chosen));
+    let results = remove_networks_parallel(iface, chosen).await;
 
     let (ok, failed): (Vec<_>, Vec<_>) = results.into_iter().partition(|(_, r)| r.is_ok());
 

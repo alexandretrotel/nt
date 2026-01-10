@@ -12,7 +12,7 @@ pub async fn dispatch() -> anyhow::Result<()> {
         unit: Unit::Mbps,
     }) {
         Commands::Speed { iface, unit } => crate::commands::speed::run(iface, unit).await?,
-        Commands::Networks { action } => crate::commands::networks::run(action)?,
+        Commands::Networks { action } => crate::commands::networks::run(action).await?,
     }
 
     Ok(())
