@@ -12,7 +12,7 @@ pub async fn run() -> anyhow::Result<()> {
         delay: 1000,
     }) {
         Commands::Speed { iface, unit, delay } => {
-            crate::app::speed::run(iface, unit, delay).await?
+            crate::app::speed::run(&iface, unit, delay).await?
         }
         Commands::List { iface, dry_run } => {
             crate::app::networks::run_list(&iface, dry_run)?;
@@ -22,7 +22,7 @@ pub async fn run() -> anyhow::Result<()> {
             ssid,
             dry_run,
         } => {
-            crate::app::networks::run_remove(&iface, &ssid, dry_run).await?;
+            crate::app::networks::run_remove(&iface, ssid.as_deref(), dry_run).await?;
         }
     }
 

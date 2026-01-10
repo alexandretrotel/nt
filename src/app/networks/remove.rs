@@ -2,7 +2,7 @@ use crate::{cli::DryRun, utils::dry_run::run_async};
 use anyhow::Result;
 
 #[cfg(target_os = "macos")]
-pub async fn run(iface: &str, ssid: &Option<String>, dry_run: DryRun) -> Result<()> {
+pub async fn run(iface: &str, ssid: Option<&str>, dry_run: DryRun) -> Result<()> {
     let message = match ssid {
         Some(s) => format!("Would remove network '{}' from interface '{}'", s, iface),
         None => format!(
@@ -20,7 +20,7 @@ pub async fn run(iface: &str, ssid: &Option<String>, dry_run: DryRun) -> Result<
 }
 
 #[cfg(not(target_os = "macos"))]
-pub async fn run(_iface: &str, _ssid: &Option<String>, dry_run: DryRun) -> Result<()> {
+pub async fn run(_iface: &str, _ssid: Option<&str>, dry_run: DryRun) -> Result<()> {
     let message = match _ssid {
         Some(s) => format!("Would remove network '{}' from interface '{}'", s, _iface),
         None => format!(

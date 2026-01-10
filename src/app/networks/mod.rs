@@ -9,6 +9,6 @@ pub fn run_list(iface: &str, dry_run: DryRun) -> Result<()> {
     list::run(iface, dry_run)
 }
 
-pub async fn run_remove(iface: &str, ssid: &Option<String>, dry_run: DryRun) -> Result<()> {
+pub async fn run_remove(iface: &str, ssid: Option<&str>, dry_run: DryRun) -> Result<()> {
     remove::run(iface, ssid, dry_run).await
 }

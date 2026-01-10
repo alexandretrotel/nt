@@ -5,14 +5,14 @@ use tokio::time::{Duration, sleep};
 
 use crate::domain::speed::unit::{Unit, format_speed_normalized};
 
-pub async fn realtime_speed(iface: String, unit: Unit, delay: u64) -> Result<()> {
+pub async fn realtime_speed(iface: &str, unit: Unit, delay: u64) -> Result<()> {
     let mut prev_rx: u64 = 0;
     let mut prev_tx: u64 = 0;
 
     loop {
         let networks = Networks::new_with_refreshed_list();
 
-        if let Some(data) = networks.get(&iface) {
+        if let Some(data) = networks.get(iface) {
             let rx = data.total_received();
             let tx = data.total_transmitted();
 
