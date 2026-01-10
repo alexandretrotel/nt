@@ -23,6 +23,10 @@ pub enum Commands {
         /// Unit to format speed (bps/kbps/mbps/gbps)
         #[arg(short, long, value_enum, default_value_t = Unit::Mbps)]
         unit: Unit,
+
+        /// Delay between updates (in milliseconds)
+        #[arg(short, long, default_value_t = 1000)]
+        delay: u64,
     },
     /// Manage network interfaces
     Networks {

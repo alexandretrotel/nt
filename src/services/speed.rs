@@ -3,9 +3,9 @@ use std::io::{Write, stdout};
 use sysinfo::Networks;
 use tokio::time::{Duration, sleep};
 
-use crate::utils::network::{Unit, format_speed};
+use crate::utils::network::{Unit, format_speed_normalized};
 
-pub async fn realtime_speed(iface: String, unit: Unit) -> Result<()> {
+pub async fn realtime_speed(iface: String, unit: Unit, delay: u64) -> Result<()> {
     let mut prev_rx: u64 = 0;
     let mut prev_tx: u64 = 0;
 
@@ -20,8 +20,8 @@ pub async fn realtime_speed(iface: String, unit: Unit) -> Result<()> {
                 let down_b = rx.saturating_sub(prev_rx);
                 let up_b = tx.saturating_sub(prev_tx);
 
-                let down_str = format_speed(down_b, unit);
-                let up_str = format_speed(up_b, unit);
+                let down_str = format_speed_normalized(down_b, unit, delay);
+                let up_str = format_speed_normalized(up_b, unit, delay);
 
                 print!("\r↓ {:>10}  ↑ {:>10}", down_str, up_str);
                 stdout().flush()?;
@@ -31,6 +31,6 @@ pub async fn realtime_speed(iface: String, unit: Unit) -> Result<()> {
             prev_tx = tx;
         }
 
-        sleep(Duration::from_secs(1)).await;
+        sleep(Duration::from_millis(delay)).await;
     }
 }

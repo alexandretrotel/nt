@@ -63,6 +63,24 @@ pub fn format_speed(bytes: u64, unit: Unit) -> String {
     format!("{:.2} {}", value, suffix)
 }
 
+pub fn format_speed_normalized(bytes: u64, unit: Unit, interval_ms: u64) -> String {
+    if interval_ms == 0 {
+        return format_speed(bytes, unit);
+    }
+
+    let bytes_per_sec = (bytes as f64) * (1000.0f64 / interval_ms as f64);
+    let bits_per_sec = bytes_per_sec * 8.0;
+
+    let value = match unit {
+        Unit::Bps => bits_per_sec,
+        Unit::Kbps => bits_per_sec / 1_000.0,
+        Unit::Mbps => bits_per_sec / 1_000_000.0,
+        Unit::Gbps => bits_per_sec / 1_000_000_000.0,
+    };
+
+    format!("{:.2} {}", value, unit)
+}
+
 #[cfg(target_os = "macos")]
 pub fn get_active_interface() -> Option<String> {
     use std::process::Command;
