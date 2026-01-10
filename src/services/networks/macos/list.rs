@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::process::Command;
 
-fn get_preferred_networks(iface: &str) -> Result<Vec<String>> {
+pub fn get_preferred_networks(iface: &str) -> Result<Vec<String>> {
     let output = Command::new("networksetup")
         .args(["-listpreferredwirelessnetworks", iface])
         .output()?;

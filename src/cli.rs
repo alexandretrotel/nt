@@ -49,7 +49,8 @@ pub enum NetworkAction {
         iface: String,
 
         /// SSID of the network to remove
-        ssid: String,
+        #[arg(short, long)]
+        ssid: Option<String>,
 
         #[command(flatten)]
         dry_run: DryRun,
