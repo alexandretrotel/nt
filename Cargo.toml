@@ -2,7 +2,7 @@
 name = "ntw"
 version = "0.1.0"
 edition = "2024"
-description = "Network tooling for macOS — realtime speed display and simple network interface management."
+description = "A macOS network toolkit providing live speed metrics and simple interface management."
 readme = "README.md"
 license = "MIT"
 repository = "https://github.com/alexandretrotel/ntw"
