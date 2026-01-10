@@ -8,7 +8,7 @@ pub async fn run() -> anyhow::Result<()> {
 
     match cli.command.unwrap_or(Commands::Speed {
         iface: default_iface(),
-        unit: Unit::Mbps,
+        unit: Unit::Auto,
         delay: 1000,
     }) {
         Commands::Speed { iface, unit, delay } => {

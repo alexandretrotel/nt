@@ -19,8 +19,8 @@ pub enum Commands {
         #[arg(short, long, default_value_t = default_iface())]
         iface: String,
 
-        /// Unit to format speed (bps/kbps/mbps/gbps)
-        #[arg(short, long, value_enum, default_value_t = Unit::Mbps)]
+        /// Unit to format speed (bps/kbps/mbps/gbps/auto)
+        #[arg(short, long, value_enum, default_value_t = Unit::Auto)]
         unit: Unit,
 
         /// Delay between updates (in milliseconds)
