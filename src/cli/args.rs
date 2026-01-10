@@ -27,15 +27,7 @@ pub enum Commands {
         #[arg(short, long, default_value_t = 1000)]
         delay: u64,
     },
-    /// Manage network interfaces
-    Networks {
-        #[command(subcommand)]
-        action: NetworkAction,
-    },
-}
 
-#[derive(Subcommand)]
-pub enum NetworkAction {
     /// List network interfaces
     List {
         /// Interface name
@@ -45,6 +37,7 @@ pub enum NetworkAction {
         #[command(flatten)]
         dry_run: DryRun,
     },
+
     /// Remove a network interface
     Remove {
         /// Interface name

@@ -62,8 +62,36 @@ pub fn bytes_to_unit(bytes: u64, unit: Unit) -> f64 {
     unit.from_bits(bits)
 }
 
+fn format_value_by_unit(value: f64, unit: Unit) -> String {
+    let number = match unit {
+        Unit::Bps => format!("{:.0}", value),
+        Unit::Kbps => format!("{:.0}", value),
+        Unit::Mbps => {
+            if value < 10.0 {
+                format!("{:.2}", value)
+            } else if value < 100.0 {
+                format!("{:.1}", value)
+            } else {
+                format!("{:.0}", value)
+            }
+        }
+        Unit::Gbps => {
+            if value < 10.0 {
+                format!("{:.2}", value)
+            } else if value < 100.0 {
+                format!("{:.1}", value)
+            } else {
+                format!("{:.2}", value)
+            }
+        }
+    };
+
+    format!("{} {}", number, unit)
+}
+
 pub fn format_speed(bytes: u64, unit: Unit) -> String {
-    format!("{:.2} {}", bytes_to_unit(bytes, unit), unit)
+    let val = bytes_to_unit(bytes, unit);
+    format_value_by_unit(val, unit)
 }
 
 pub fn format_speed_normalized(bytes: u64, unit: Unit, interval_ms: u64) -> String {
@@ -73,5 +101,5 @@ pub fn format_speed_normalized(bytes: u64, unit: Unit, interval_ms: u64) -> Stri
 
     let bits_per_sec = (bytes as f64 * 8.0) * (1000.0 / interval_ms as f64);
 
-    format!("{:.2} {}", unit.from_bits(bits_per_sec), unit)
+    format_value_by_unit(unit.from_bits(bits_per_sec), unit)
 }

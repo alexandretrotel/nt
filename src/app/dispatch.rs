@@ -14,7 +14,16 @@ pub async fn run() -> anyhow::Result<()> {
         Commands::Speed { iface, unit, delay } => {
             crate::app::speed::run(iface, unit, delay).await?
         }
-        Commands::Networks { action } => crate::app::networks::run(action).await?,
+        Commands::List { iface, dry_run } => {
+            crate::app::networks::run_list(&iface, dry_run)?;
+        }
+        Commands::Remove {
+            iface,
+            ssid,
+            dry_run,
+        } => {
+            crate::app::networks::run_remove(&iface, &ssid, dry_run).await?;
+        }
     }
 
     Ok(())
