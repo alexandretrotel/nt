@@ -75,22 +75,3 @@ pub fn format_speed_normalized(bytes: u64, unit: Unit, interval_ms: u64) -> Stri
 
     format!("{:.2} {}", unit.from_bits(bits_per_sec), unit)
 }
-
-#[cfg(target_os = "macos")]
-pub fn get_active_interface() -> Option<String> {
-    use std::process::Command;
-
-    let output = Command::new("route")
-        .args(["get", "default"])
-        .output()
-        .ok()?;
-
-    let stdout = String::from_utf8_lossy(&output.stdout);
-    for line in stdout.lines() {
-        let trimmed = line.trim_start();
-        if let Some(rest) = trimmed.strip_prefix("interface:") {
-            return Some(rest.trim().to_string());
-        }
-    }
-    None
-}

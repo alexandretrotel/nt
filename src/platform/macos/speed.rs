@@ -3,7 +3,7 @@ use std::io::{Write, stdout};
 use sysinfo::Networks;
 use tokio::time::{Duration, sleep};
 
-use crate::utils::network::{Unit, format_speed_normalized};
+use crate::domain::speed::unit::{Unit, format_speed_normalized};
 
 pub async fn realtime_speed(iface: String, unit: Unit, delay: u64) -> Result<()> {
     let mut prev_rx: u64 = 0;
@@ -33,4 +33,22 @@ pub async fn realtime_speed(iface: String, unit: Unit, delay: u64) -> Result<()>
 
         sleep(Duration::from_millis(delay)).await;
     }
+}
+
+pub fn get_active_interface() -> Option<String> {
+    use std::process::Command;
+
+    let output = Command::new("route")
+        .args(["get", "default"])
+        .output()
+        .ok()?;
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    for line in stdout.lines() {
+        let trimmed = line.trim_start();
+        if let Some(rest) = trimmed.strip_prefix("interface:") {
+            return Some(rest.trim().to_string());
+        }
+    }
+    None
 }

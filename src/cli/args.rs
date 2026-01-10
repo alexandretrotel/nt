@@ -1,8 +1,7 @@
 use clap::{Args, Parser, Subcommand};
 
-use crate::utils::network::Unit;
-
-use crate::constants::default_cli_args::default_iface;
+use crate::cli::defaults::default_iface;
+use crate::domain::speed::unit::Unit;
 
 #[derive(Parser)]
 #[command(name = "ntw")]

@@ -1,13 +1,9 @@
 use anyhow::{Context, Result};
 use std::process::{Command, Stdio};
 
-#[cfg(target_os = "macos")]
 use inquire::MultiSelect;
 
-#[cfg(target_os = "macos")]
 use super::list;
-
-use tokio::task::JoinSet;
 
 pub async fn remove_network_or_interactive(iface: &str, ssid: Option<&str>) -> Result<()> {
     match ssid {
@@ -57,7 +53,7 @@ pub async fn remove_networks_interactive(iface: &str) -> Result<()> {
 }
 
 async fn remove_networks_parallel(iface: &str, ssids: Vec<String>) -> Vec<(String, Result<()>)> {
-    let mut set = JoinSet::new();
+    let mut set = tokio::task::JoinSet::new();
 
     for ssid in ssids {
         let iface = iface.to_string();

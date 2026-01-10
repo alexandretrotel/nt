@@ -1,9 +1,9 @@
-use ntw::dispatch::dispatch;
+use ntw::app::dispatch::run;
 
 #[cfg(target_os = "macos")]
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    dispatch().await
+    run().await
 }
 
 #[cfg(not(target_os = "macos"))]
